@@ -1,9 +1,10 @@
 # Default options.
 CXX := mpic++
 CXX_WARNING_OPTIONS := -Wall -Wextra -Wno-unused-result
-CXXFLAGS := -std=c++11 -O3 -fopenmp $(CXX_WARNING_OPTIONS)
+CXXFLAGS := -std=c++17 -O3 -fopenmp $(CXX_WARNING_OPTIONS)
 LDLIBS := -pthread -lpthread
 SRC_DIR := src
+TEST_DIR := tests
 BUILD_DIR := build
 VENDOR_DIR := vendor
 TEST_EXE := test.out
@@ -26,9 +27,9 @@ endif
 
 # Sources and intermediate objects.
 CXXFLAGS := $(CXXFLAGS) -I $(VENDOR_DIR)
-TESTS := $(shell find $(SRC_DIR) -name "*_test.cc")
+TEST := $(shell find $(TEST_DIR) -name "*_test.cc")
 HEADERS := $(shell find $(SRC_DIR) -name "*.h" -or -name "*.inl")
-TEST_OBJS := $(TESTS:$(SRC_DIR)/%.cc=$(BUILD_DIR)/%.o)
+TEST_OBJS := $(TEST:$(TEST_DIR)/%.cc=$(BUILD_DIR)/%.o)
 GTEST_DIR := $(VENDOR_DIR)/googletest/googletest
 GMOCK_DIR := $(VENDOR_DIR)/googletest/googlemock
 GTEST_ALL_SRC := ${GTEST_DIR}/src/gtest-all.cc
@@ -66,5 +67,5 @@ $(BUILD_DIR)/gmock-all.o: $(GMOCK_ALL_SRC)
 $(TEST_LIB): $(BUILD_DIR)/gtest-all.o $(BUILD_DIR)/gmock-all.o
 	$(AR) $(ARFLAGS) $@ $(BUILD_DIR)/gtest-all.o $(BUILD_DIR)/gmock-all.o
 
-$(TEST_OBJS): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cc $(HEADERS)
+$(TEST_OBJS): $(BUILD_DIR)/%.o: $(TEST_DIR)/%.cc $(HEADERS)
 	mkdir -p $(@D) && $(CXX) $(TEST_CXXFLAGS) -c $< -o $@
