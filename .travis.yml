@@ -1,0 +1,13 @@
+language: cpp
+sudo: false
+dist: xenial
+compiler:
+  - gcc
+os:
+  - linux
+env:
+  - TOOLS_DIR=$TRAVIS_BUILD_DIR/tools
+script: bash ./ci.sh
+cache:
+  directories:
+    - tools/openmpi
