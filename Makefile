@@ -46,10 +46,10 @@ TEST_LIB := $(BUILD_DIR)/libgtest.a
 all: test
 
 test: $(TEST_EXE)
-	./$(TEST_EXE)
+	./$(TEST_EXE) --gtest_filter=-*LargeTest.*
 
 test_mpi: $(TEST_EXE)
-	OMP_NUM_THREADS=3 mpirun -n 3 ./$(TEST_EXE)
+	OMP_NUM_THREADS=3 mpirun -n 3 ./$(TEST_EXE) --gtest_filter=-*LargeTest.*
 
 clean:
 	rm -rf $(BUILD_DIR)

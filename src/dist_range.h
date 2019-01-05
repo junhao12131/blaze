@@ -18,23 +18,19 @@ namespace blaze {
 template <class T>
 class DistRange {
  public:
-  template <typename V, typename... U>
-  size_t getAddress(std::function<V(U...)> f) {
-    typedef V(fnType)(U...);
-    fnType** fnPointer = f.template target<fnType*>();
-    return (size_t)*fnPointer;
-  }
   DistRange(const T start, const T end, const T inc = 1) : start(start), end(end), inc(inc) {}
 
   void for_each(const std::function<void(const T)>& handler, const bool verbose = false) {
     const int n_procs = internal::MpiUtil::get_n_procs();
     const int proc_id = internal::MpiUtil::get_proc_id();
     double target_progress = 0.1;
-#pragma omp parallel for schedule(static, 4)
-    for (T t = start + inc * proc_id; t < end; t += inc * n_procs) {
+    T t_start = start + inc * proc_id;
+    T t_step = inc * n_procs;
+#pragma omp parallel for schedule(dynamic, 4)
+    for (T t = t_start; t < end; t += t_step) {
       handler(t);
       const int thread_id = omp_get_thread_num();
-      if (thread_id != 0 || !verbose) continue;
+      if (!verbose || thread_id != 0) continue;
       const double current_progress = static_cast<double>(t - start) / (end - start);
       while (target_progress < current_progress) {
         printf("%.0f%% ", target_progress * 100);
@@ -68,7 +64,6 @@ class DistRange {
       reducer(res_threads[thread_id][key], value);
     };
     for_each([&](const T t) { mapper(t, emit); });
-    std::cout << "check";
 
     // Node reduce.
     int step = 1;
