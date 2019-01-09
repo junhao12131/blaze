@@ -2,7 +2,7 @@ import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.mllib.linalg.Vectors
 
 // Load and parse the data
-val data = sc.textFile("kmeans_data.txt")
+val data = sc.textFile("tests/kmeans_data.txt")
 val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
 
 val initialModel = new KMeansModel(
@@ -10,8 +10,12 @@ val initialModel = new KMeansModel(
 )
 
 // Cluster the data into classes using KMeans
-val t0 = System.nanoTime()
-for (i <- 0 until 10) {
+var t0 = 0L
+for (i <- 0 to 10) {
+  if (i == 1) {
+    t0 = System.nanoTime()
+  }
+  println(i)
   val model = new KMeans()
   model.setK(5)
   model.setInitialModel(initialModel)

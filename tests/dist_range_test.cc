@@ -84,8 +84,12 @@ TEST(DistRangeTest, MapreduceKMeansLargeTest) {
   const int n_centers = 5;
   std::vector<std::array<double, 3>> centers(n_centers);
 
-  auto start = std::chrono::steady_clock::now();
-  for (int t = 0; t < 10; t++) {
+  std::chrono::steady_clock::time_point start;
+  for (int t = 0; t <= 10; t++) {
+    if (t == 1) {
+      start = std::chrono::steady_clock::now();
+    }
+    printf("%d\n", t);
     for (int i = 0; i < n_centers; i++) {
       centers[i].fill(0);
       centers[i][0] = i;
