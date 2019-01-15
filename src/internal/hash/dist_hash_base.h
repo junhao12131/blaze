@@ -5,7 +5,7 @@
 #include "../mpi_util.h"
 #include "dist_hasher.h"
 
-namespace fgpl {
+namespace blaze {
 namespace internal {
 namespace hash {
 
@@ -138,4 +138,4 @@ void DistHashBase<K, V, C, H>::clear_and_shrink() {
 
 }  // namespace hash
 }  // namespace internal
-}  // namespace fgpl
+}  // namespace blaze

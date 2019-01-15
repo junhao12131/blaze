@@ -7,7 +7,7 @@
 #include "concurrent_hash_map.h"
 #include "dist_hash_base.h"
 
-namespace fgpl {
+namespace blaze {
 namespace internal {
 namespace hash {
 
@@ -207,4 +207,4 @@ V2 DistHashMap<K, V, H>::mapreduce(
 
 }  // namespace hash
 }  // namespace internal
-}  // namespace fgpl
+}  // namespace blaze

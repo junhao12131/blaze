@@ -4,7 +4,7 @@
 #include "concurrent_hash_base.h"
 #include "hash_set.h"
 
-namespace fgpl {
+namespace blaze {
 namespace internal {
 namespace hash {
 
@@ -119,4 +119,4 @@ void ConcurrentHashSet<K, H>::parse(B& buf) {
 
 }  // namespace hash
 }  // namespace internal
-}  // namespace fgpl
+}  // namespace blaze

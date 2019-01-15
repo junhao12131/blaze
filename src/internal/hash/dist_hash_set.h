@@ -6,7 +6,7 @@
 #include "concurrent_hash_set.h"
 #include "dist_hash_base.h"
 
-namespace fgpl {
+namespace blaze {
 namespace internal {
 namespace hash {
 
@@ -142,4 +142,4 @@ void DistHashSet<K, H>::for_each_serial(
 
 }  // namespace hash
 }  // namespace internal
-}  // namespace fgpl
+}  // namespace blaze

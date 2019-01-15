@@ -3,7 +3,7 @@
 #include <functional>
 #include "../mpi_util.h"
 
-namespace fgpl {
+namespace blaze {
 namespace internal {
 namespace hash {
 template <class K, class H>
@@ -21,4 +21,4 @@ class DistHasher {
 };
 }  // namespace hash
 }  // namespace internal
-}  // namespace fgpl
+}  // namespace blaze

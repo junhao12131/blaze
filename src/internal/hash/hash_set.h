@@ -4,7 +4,7 @@
 #include <vector>
 #include "hash_base.h"
 
-namespace fgpl {
+namespace blaze {
 namespace internal {
 namespace hash {
 
@@ -98,4 +98,4 @@ void HashSet<K, H>::parse(B& buf) {
 
 }  // namespace hash
 }  // namespace internal
-}  // namespace fgpl
+}  // namespace blaze
