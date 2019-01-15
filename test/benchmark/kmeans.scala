@@ -2,7 +2,7 @@ import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.mllib.linalg.Vectors
 
 // Load and parse the data
-val data = sc.textFile("tests/kmeans_data.txt")
+val data = sc.textFile("data/kmeans_data_small.txt")
 val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
 
 val initialModel = new KMeansModel(

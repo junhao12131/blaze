@@ -14,11 +14,11 @@ class Reducer {
   static void sum(T& t1, const T& t2) { t1 += t2; }
 
   static void min(T& t1, const T& t2) {
-    if (t1 < t2) t1 = t2;
+    if (t1 > t2) t1 = t2;
   }
 
   static void max(T& t1, const T& t2) {
-    if (t1 > t2) t1 = t2;
+    if (t1 < t2) t1 = t2;
   }
 };
 }  // namespace blaze

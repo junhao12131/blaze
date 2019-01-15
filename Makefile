@@ -4,10 +4,10 @@ CXX_WARNING_OPTIONS := -Wall -Wextra -Wno-unused-result
 CXXFLAGS := -std=c++17 -O3 -fopenmp $(CXX_WARNING_OPTIONS)
 LDLIBS := -pthread -lpthread
 SRC_DIR := src
-TEST_DIR := tests
+TEST_DIR := test
 BUILD_DIR := build
 VENDOR_DIR := vendor
-TEST_EXE := test.out
+TEST_EXE := blaze_test.out
 
 # Load Makefile.config if exists.
 LOCAL_MAKEFILE := local.mk
@@ -27,7 +27,7 @@ endif
 
 # Sources and intermediate objects.
 CXXFLAGS := $(CXXFLAGS) -I $(VENDOR_DIR)
-TEST := $(shell find $(TEST_DIR) -name "*_test.cc")
+TEST := $(shell find $(TEST_DIR) -name "*.cc")
 HEADERS := $(shell find $(SRC_DIR) -name "*.h" -or -name "*.inl")
 TEST_OBJS := $(TEST:$(TEST_DIR)/%.cc=$(BUILD_DIR)/%.o)
 GTEST_DIR := $(VENDOR_DIR)/googletest/googletest
@@ -46,10 +46,10 @@ TEST_LIB := $(BUILD_DIR)/libgtest.a
 all: test
 
 test: $(TEST_EXE)
-	./$(TEST_EXE) --gtest_filter=-*LargeTest
+	./$(TEST_EXE) --gtest_filter=-BenchmarkTest.*
 
 test_mpi: $(TEST_EXE)
-	OMP_NUM_THREADS=3 mpirun -n 3 ./$(TEST_EXE) --gtest_filter=-*LargeTest
+	OMP_NUM_THREADS=2 mpirun -n 4 ./$(TEST_EXE) --gtest_filter=-*BenchmarkTest.*
 
 clean:
 	rm -rf $(BUILD_DIR)
