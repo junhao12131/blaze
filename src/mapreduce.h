@@ -1,7 +1,9 @@
-#pragma once
+#ifndef BLAZE_MAPREDUCE_H_
+#define BLAZE_MAPREDUCE_H_
 
 #include "dist_range_mapreducer.h"
 #include "dist_vector_mapreducer.h"
+#include "internal/mapreduce_util.h"
 
 namespace blaze {
 
@@ -17,9 +19,32 @@ void mapreduce(
 
 template <class VS, class VD>
 void mapreduce(
-    blaze::DistVector<VS>& source,
+    DistRange<VS>& source,
     const std::function<
-        void(const size_t key, const VS& value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+        void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+    const std::string& reducer,
+    blaze::DistVector<VD>& dest) {
+  DistRangeMapreducer<VS>::mapreduce(
+      source, mapper, internal::MapreduceUtil::get_reducer_func<VD>(reducer), dest);
+}
+
+template <class VS, class VD>
+void mapreduce(
+    DistRange<VS>& source,
+    const std::function<
+        void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+    const std::function<void(VD&, const VD&)>& reducer,
+    blaze::DistVector<VD>& dest) {
+  DistRangeMapreducer<VS>::mapreduce(source, mapper, reducer, dest);
+}
+
+template <class VS, class VD>
+void mapreduce(
+    blaze::DistVector<VS>& source,
+    const std::function<void(
+        const size_t key,
+        const VS& value,
+        const std::function<void(const size_t, const VD&)>& emit)>& mapper,
     const std::string& reducer,
     std::vector<VD>& dest) {
   DistVectorMapreducer<VS>::mapreduce(source, mapper, reducer, dest);
@@ -28,8 +53,10 @@ void mapreduce(
 template <class VS, class VD>
 void mapreduce(
     blaze::DistVector<VS>& source,
-    const std::function<
-        void(const size_t key, const VS& value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+    const std::function<void(
+        const size_t key,
+        const VS& value,
+        const std::function<void(const size_t, const VD&)>& emit)>& mapper,
     const std::function<void(VD&, const VD&)>& reducer,
     blaze::DistVector<VD>& dest) {
   DistVectorMapreducer<VS>::mapreduce(source, mapper, reducer, dest);
@@ -57,3 +84,5 @@ void mapreduce(
     */
 
 }  // namespace blaze
+
+#endif

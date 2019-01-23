@@ -4,3 +4,6 @@
 [submodule "vendor/hps"]
 	path = vendor/hps
 	url = https://github.com/jl2922/hps.git
+[submodule "vendor/eigen-git-mirror"]
+	path = vendor/eigen-git-mirror
+	url = https://github.com/eigenteam/eigen-git-mirror

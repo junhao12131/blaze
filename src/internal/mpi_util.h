@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_MPI_UTIL_H_
+#define BLAZE_INTERNAL_MPI_UTIL_H_
 
 #include <mpi.h>
 #include <algorithm>
@@ -56,3 +57,5 @@ class MpiUtil {
 
 }  // namespace internal
 }  // namespace blaze
+
+#endif

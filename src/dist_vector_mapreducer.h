@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_DIST_VECTOR_MAPREDUCER_H_
+#define BLAZE_DIST_VECTOR_MAPREDUCER_H_
 
 #include <functional>
 #include <limits>
@@ -116,3 +117,5 @@ void DistVectorMapreducer<VS>::mapreduce(
 }
 
 }  // namespace blaze
+
+#endif

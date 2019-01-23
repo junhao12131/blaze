@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_DIST_RANGE_H_
+#define BLAZE_DIST_RANGE_H_
 
 #include <mpi.h>
 #include <omp.h>
@@ -114,3 +115,5 @@ class DistRange {
 };
 
 }  // namespace blaze
+
+#endif

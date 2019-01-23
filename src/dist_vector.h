@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_DIST_VECTOR_H_
+#define BLAZE_DIST_VECTOR_H_
 
 #include <functional>
 #include <vector>
@@ -313,3 +314,5 @@ std::vector<V> DistVector<V>::top_k(
 }
 
 }  // namespace blaze
+
+#endif

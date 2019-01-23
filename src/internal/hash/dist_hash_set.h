@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_DIST_HASH_SET_H_
+#define BLAZE_INTERNAL_HASH_DIST_HASH_SET_H_
 
 #include "../../../vendor/hps/src/hps.h"
 #include "../../gather.h"
@@ -143,3 +144,5 @@ void DistHashSet<K, H>::for_each_serial(
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

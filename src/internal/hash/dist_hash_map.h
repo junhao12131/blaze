@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_DIST_HASH_MAP_H_
+#define BLAZE_INTERNAL_HASH_DIST_HASH_MAP_H_
 
 #include "../../../vendor/hps/src/hps.h"
 #include "../../gather.h"
@@ -208,3 +209,5 @@ V2 DistHashMap<K, V, H>::mapreduce(
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

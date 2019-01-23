@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_HASH_BASE_H_
+#define BLAZE_INTERNAL_HASH_HASH_BASE_H_
 
 #include <vector>
 #include "hash_entry.h"
@@ -77,9 +78,10 @@ void HashBase<K, V, H>::reserve_n_buckets(const size_t n_buckets_min) {
 
 template <class K, class V, class H>
 size_t HashBase<K, V, H>::get_n_rehash_buckets(const size_t n_buckets_min) {
-  constexpr size_t PRIMES[] = {
-      13, 17, 23, 29, 37, 47, 61, 79, 101, 127, 163, 211, 271, 337, 439, 547, 709, 887, 1153, 1433,
-      1861, 2311, 3001, 3739, 4861, 6053, 7867, 9791, 12721, 15859, 20611, 26783, 34841};
+  constexpr size_t PRIMES[] = {13,   17,    23,    29,    37,    47,   61,   79,   101,
+                               127,  163,   211,   271,   337,   439,  547,  709,  887,
+                               1153, 1433,  1861,  2311,  3001,  3739, 4861, 6053, 7867,
+                               9791, 12721, 15859, 20611, 26783, 34841};
   constexpr size_t N_PRIMES = sizeof(PRIMES) / sizeof(size_t);
   constexpr size_t LAST_PRIME = PRIMES[N_PRIMES - 1];
   constexpr size_t BIG_PRIME = PRIMES[N_PRIMES - 10];
@@ -203,6 +205,9 @@ void HashBase<K, V, H>::clear_and_shrink() {
   n_buckets = N_INITIAL_BUCKETS;
   clear();
 }
+
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

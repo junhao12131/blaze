@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_HASH_ENTRY_H_
+#define BLAZE_INTERNAL_HASH_HASH_ENTRY_H_
 
 #include <cstddef>
 #include <functional>
@@ -55,6 +56,9 @@ class HashEntry<K, void> {
     return this->hash_value == hash_value && this->key == key;
   }
 };
+
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

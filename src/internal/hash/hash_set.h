@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_HASH_SET_H_
+#define BLAZE_INTERNAL_HASH_HASH_SET_H_
 
 #include <functional>
 #include <vector>
@@ -99,3 +100,5 @@ void HashSet<K, H>::parse(B& buf) {
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

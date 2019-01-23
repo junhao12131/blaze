@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_CONCURRENT_VECTOR_H_
+#define BLAZE_CONCURRENT_VECTOR_H_
 
 #include <omp.h>
 #include <algorithm>
@@ -213,3 +214,5 @@ std::vector<V> ConcurrentVector<V>::top_k(
 
 }  // namespace internal
 }  // namespace blaze
+
+#endif

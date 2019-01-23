@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_GATHER_H_
+#define BLAZE_INTERNAL_GATHER_H_
 
 #include <hps/src/hps.h>
 #include <algorithm>
@@ -65,3 +66,5 @@ std::vector<T> gather(T& t) {
 
 }  // namespace internal
 }  // namespace blaze
+
+#endif
