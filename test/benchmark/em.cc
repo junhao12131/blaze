@@ -12,7 +12,9 @@ void run_em_gaussian_mixture(
     std::vector<double>& weights,
     std::vector<std::array<double, N>>& centers,
     std::vector<std::array<std::array<double, N>, N>>& sigmas,
-    double epsilon = 1.0e-10) {
+    double epsilon = 1.0e-10,
+    size_t max_iterations = 100) {
+  using namespace std::chrono;
   const size_t n_points = points.size();
   const size_t n_centers = centers.size();
 
@@ -23,11 +25,11 @@ void run_em_gaussian_mixture(
 
   const double PI = 3.14159265358979323846;
   std::vector<double> denominators(n_centers);
-  std::vector<Eigen::MatrixXd> eigen_inv_sigmas(n_centers);
-  std::vector<Eigen::VectorXd> eigen_centers(n_centers);
+  std::vector<Eigen::Matrix<double, N, N>> eigen_inv_sigmas(n_centers);
+  std::vector<Eigen::Matrix<double, N, 1>> eigen_centers(n_centers);
   for (size_t i = 0; i < n_centers; i++) {
-    Eigen::MatrixXd eigen_sigma(N, N);
-    Eigen::VectorXd eigen_center(N);
+    Eigen::Matrix<double, N, N> eigen_sigma;
+    Eigen::Matrix<double, N, 1> eigen_center;
     for (size_t j = 0; j < N; j++) {
       for (size_t k = 0; k < N; k++) {
         eigen_sigma(j, k) = sigmas[i][j][k];
@@ -41,11 +43,11 @@ void run_em_gaussian_mixture(
 
   const auto& likelihood_mapper = [&](
       const size_t i, const std::function<void(const size_t, const std::vector<double>&)>& emit) {
-    Eigen::VectorXd x(N);
+    Eigen::Matrix<double, N, 1> x;
     for (size_t j = 0; j < N; j++) x[j] = points[i][j];
     std::vector<double> point_likelihood(n_centers);
     for (size_t j = 0; j < n_centers; j++) {
-      auto diff = x - eigen_centers[j];
+      Eigen::Matrix<double, N, 1> diff = x - eigen_centers[j];
       const double exponent = -0.5 * (diff.transpose() * eigen_inv_sigmas[j] * diff).value();
       point_likelihood[j] = denominators[j] * std::exp(exponent);
     }
@@ -95,9 +97,12 @@ void run_em_gaussian_mixture(
       const size_t key,
       const std::vector<double>& value,
       const std::function<void(const size_t, const double&)>& emit) {
+    size_t flat_key = 0;
     for (size_t i = 0; i < n_centers; i++) {
+      double elem_base = value[i];
       for (size_t j = 0; j < N; j++) {
-        emit(i * N + j, value[i] * points[key][j]);
+        emit(flat_key, elem_base * points[key][j]);
+        flat_key++;
       }
     }
   };
@@ -106,13 +111,14 @@ void run_em_gaussian_mixture(
       const size_t key,
       const std::vector<double>& value,
       const std::function<void(const size_t, const double&)>& emit) {
+    size_t flat_key = 0;
     for (size_t i = 0; i < n_centers; i++) {
       for (size_t j = 0; j < N; j++) {
+        double elem_base = value[i] * (points[key][j] - centers[i][j]);
         for (size_t k = 0; k < N; k++) {
-          double flat_key = i * N * N + j * N + k;
-          double elem =
-              value[i] * (points[key][j] - centers[i][j]) * (points[key][k] - centers[i][k]);
+          double elem = elem_base * (points[key][k] - centers[i][k]);
           emit(flat_key, elem);
+          flat_key++;
         }
       }
     }
@@ -123,7 +129,12 @@ void run_em_gaussian_mixture(
   std::vector<double> prev_log_likelihood_vec(1, 0.0);
   std::vector<double> flat_centers;
   std::vector<double> flat_sigmas;
+
+  size_t iteration = 0;
   while (likelihood_change > epsilon) {
+    iteration++;
+    if (iteration > max_iterations) break;
+
     // Expectation.
     blaze::mapreduce<size_t, std::vector<double>>(
         n_points_range,
@@ -174,8 +185,8 @@ void run_em_gaussian_mixture(
     }
 
     for (size_t i = 0; i < n_centers; i++) {
-      Eigen::VectorXd eigen_center(N);
-      Eigen::MatrixXd eigen_sigma(N, N);
+      Eigen::Matrix<double, N, 1> eigen_center;
+      Eigen::Matrix<double, N, N> eigen_sigma;
       for (size_t j = 0; j < N; j++) {
         eigen_center[j] = centers[i][j];
         for (size_t k = 0; k < N; k++) {
