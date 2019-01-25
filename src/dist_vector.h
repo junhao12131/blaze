@@ -33,8 +33,23 @@ class DistVector {
 
   void sync(const std::function<void(V&, const V&)>& reducer = Reducer<V>::overwrite);
 
+  DistVector<V>& operator+=(const DistVector<V>& rhs) {
+    local_data += rhs.local_data;
+    return *this;
+  }
+
   DistVector<V>& operator-=(const DistVector<V>& rhs) {
     local_data -= rhs.local_data;
+    return *this;
+  }
+
+  DistVector<V>& operator*=(const DistVector<V>& rhs) {
+    local_data *= rhs.local_data;
+    return *this;
+  }
+
+  DistVector<V>& operator/=(const DistVector<V>& rhs) {
+    local_data /= rhs.local_data;
     return *this;
   }
 
