@@ -201,7 +201,7 @@ void run_em_gaussian_mixture(
 }
 
 TEST(BenchmarkTest, EMGaussianMixture) {
-  std::ifstream file("test/benchmark/data/kmeans_data_small.txt");
+  std::ifstream file("test/benchmark/data/cluster_data.txt");
   std::vector<std::array<double, 3>> points;
   std::array<double, 3> point;
   using namespace std::chrono;
@@ -236,7 +236,7 @@ TEST(BenchmarkTest, EMGaussianMixture) {
       }
     }
     auto it_start = steady_clock::now();
-    run_em_gaussian_mixture(points, weights, centers, sigmas, 1.0e-10);
+    run_em_gaussian_mixture(points, weights, centers, sigmas, 1.0e-5);
     auto it_end = steady_clock::now();
     for (int i = 0; i < n_centers; i++) {
       for (int k = 0; k < 3; k++) {

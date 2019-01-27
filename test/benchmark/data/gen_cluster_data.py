@@ -6,15 +6,16 @@ import argparse
 
 def main():
     # N_POINTS = 50
-    N_POINTS = 500000
+    N_POINTS = 2000000
     # N_POINTS = 5000000
     N_CENTERS = 5
     CENTERS = []
     for i in range(N_CENTERS):
         CENTERS.append([i, i, i])
 
-    output = open('kmeans_data_small.txt', 'w')
-    # output = open('kmeans_data.txt', 'w')
+    # output = open('kmeans_data_small.txt', 'w')
+    # output = open('kmeans_data_small.txt', 'w')
+    output = open('cluster_data.txt', 'w')
     ic = 0
     for i in range(N_POINTS):
         if ic == N_CENTERS:

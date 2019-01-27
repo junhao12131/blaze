@@ -3,7 +3,7 @@ import org.apache.spark.mllib.clustering.{GaussianMixture, GaussianMixtureModel}
 import org.apache.spark.mllib.stat.distribution.MultivariateGaussian
 
 // Load and parse the data
-val data = sc.textFile("data/kmeans_data_small.txt")
+val data = sc.textFile("data/cluster_data.txt")
 // val data = sc.textFile("data/kmeans_data_small.txt")
 val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
 
@@ -27,7 +27,7 @@ for (i <- 0 to 3) {
       new MultivariateGaussian(new DenseVector(Array(3.0, 0.0, 0.0)), sigma),
       new MultivariateGaussian(new DenseVector(Array(4.0, 0.0, 0.0)), sigma)))
   model.setInitialModel(initialModel)
-  model.setConvergenceTol(1.0e-10)
+  model.setConvergenceTol(1.0e-5)
   println(model.getMaxIterations)
   val it_start = System.nanoTime()
   val res = model.run(parsedData)
