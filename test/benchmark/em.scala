@@ -3,8 +3,7 @@ import org.apache.spark.mllib.clustering.{GaussianMixture, GaussianMixtureModel}
 import org.apache.spark.mllib.stat.distribution.MultivariateGaussian
 
 // Load and parse the data
-val data = sc.textFile("data/cluster_data.txt")
-// val data = sc.textFile("data/kmeans_data_small.txt")
+val data = sc.textFile("data/cluster_data_em.txt")
 val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
 
 val sigma = DenseMatrix.eye(3)

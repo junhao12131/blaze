@@ -108,9 +108,6 @@ void DistVector<V>::resize(const size_t n, const V& value) {
   if (n % n_procs_u > proc_id_u) n_local++;
 
   local_data.resize(n_local, value);
-  for (auto& remote_map : remote_data) {
-    remote_map.reserve(n / n_procs / n_procs + 1);
-  }
 }
 
 template <class V>

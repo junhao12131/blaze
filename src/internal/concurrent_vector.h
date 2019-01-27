@@ -57,6 +57,17 @@ class ConcurrentVector {
   std::vector<hash::HashMap<size_t, V, std::hash<size_t>>> thread_caches;
 
   std::vector<omp_lock_t> segment_locks;
+
+  std::vector<V> get_vector_top_k(
+      std::vector<V>& target,
+      const size_t k,
+      const std::function<bool(const V&, const V&)>& compare);
+
+  std::vector<V> merge_vector_top_k(
+      const std::vector<V>& a,
+      const std::vector<V>& b,
+      const size_t k,
+      const std::function<bool(const V&, const V&)>& compare);
 };
 
 template <class V>
@@ -180,34 +191,91 @@ ConcurrentVector<V>& ConcurrentVector<V>::operator-=(const ConcurrentVector<V>& 
 template <class V>
 std::vector<V> ConcurrentVector<V>::top_k(
     const size_t k, const std::function<bool(const V&, const V&)>& compare) {
-  std::vector<V> all_data(n);
+  std::vector<std::vector<V>> segment_top_ks(n_segments);
 
-  const size_t n_segment_base = n >> n_segments_shift;
-  size_t pos = 0;
+  const size_t segment_n_base = n >> n_segments_shift;
+#pragma omp parallel for
   for (size_t segment_id = 0; segment_id < n_segments; segment_id++) {
-    size_t n_segment = n_segment_base;
-    if ((n & n_segments_filter) > segment_id) n_segment++;
-    memcpy(all_data.data() + pos, segments[segment_id].data(), sizeof(V) * n_segment);
-    pos += n_segment;
+    size_t segment_n = segment_n_base;
+    if ((n & n_segments_filter) > segment_id) segment_n++;
+    std::vector<V> segment_copy = segments[segment_id];
+    segment_copy.resize(segment_n);
+    segment_top_ks[segment_id] = get_vector_top_k(segment_copy, k, compare);
   }
 
-  if (n <= k) {
-    std::sort(all_data.begin(), all_data.end(), compare);
-    return all_data;
+  size_t step = 1;
+  while (step < n_segments) {
+    size_t i_end = n_segments - step;
+    size_t i_step = step << 1;
+#pragma omp parallel for schedule(static, 1)
+    for (size_t i = 0; i < i_end; i += i_step) {
+      segment_top_ks[i] =
+          merge_vector_top_k(segment_top_ks[i], segment_top_ks[i + step], k, compare);
+    }
+    step <<= 1;
   }
 
-  std::nth_element(all_data.begin(), all_data.begin() + k, all_data.end(), compare);
+  std::vector<V> result = segment_top_ks[0];
+  return result;
+}
+
+template <class V>
+std::vector<V> ConcurrentVector<V>::get_vector_top_k(
+    std::vector<V>& target,
+    const size_t k,
+    const std::function<bool(const V&, const V&)>& compare) {
+  if (target.size() <= k) {
+    std::sort(target.begin(), target.end(), compare);
+    return target;
+  }
+
+  std::nth_element(target.begin(), target.begin() + k, target.end(), compare);
   std::vector<V> result;
 
-  V threshold = all_data[k - 1];
-  for (size_t i = 0; i < n; i++) {
-    if (!compare(threshold, all_data[i])) {
-      result.push_back(all_data[i]);
+  V threshold = target[k - 1];
+  for (size_t i = 0; i < target.size(); i++) {
+    if (!compare(threshold, target[i])) {
+      result.push_back(target[i]);
     }
   }
 
   std::sort(result.begin(), result.end(), compare);
   result.resize(k);
+  return result;
+}
+
+template <class V>
+std::vector<V> ConcurrentVector<V>::merge_vector_top_k(
+    const std::vector<V>& a,
+    const std::vector<V>& b,
+    const size_t k,
+    const std::function<bool(const V&, const V&)>& compare) {
+  std::vector<V> result;
+  size_t pos = 0;
+  size_t na = a.size();
+  size_t nb = b.size();
+  size_t pos_a = 0;
+  size_t pos_b = 0;
+  while (pos < k && pos_a < na && pos_b < nb) {
+    if (compare(a[pos_a], b[pos_b])) {
+      result.push_back(a[pos_a]);
+      pos_a++;
+    } else {
+      result.push_back(b[pos_b]);
+      pos_b++;
+    }
+    pos++;
+  }
+  while (pos < k && pos_a < na) {
+    result.push_back(a[pos_a]);
+    pos_a++;
+    pos++;
+  }
+  while (pos < k && pos_b < nb) {
+    result.push_back(b[pos_b]);
+    pos_b++;
+    pos++;
+  }
   return result;
 }
 
