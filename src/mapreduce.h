@@ -147,27 +147,6 @@ void mapreduce(
   DistHashMapMapreducer<KS, VS, HS>::mapreduce(source, mapper, reducer, dest);
 }
 
-/*
-template <class K, class V, class H, class T>
-void mapreduce(const blaze::DistMap<K, V, H>& source, mapper, reducer, std::vector<T>& dest);
-
-template <class VS, T>
-void mapreduce(const blaze::DistRange<VS>& source, mapper, reducer, blaze::DistVector<T>& dest);
-
-template <class K, class V, class H, class T>
-void mapreduce(const blaze::DistMap<K, V, H>& source, mapper, reducer, blaze::DistVector<T>& dest);
-
-template <class T, class K, class V, class H>
-void mapreduce(const blaze::DistRange<T>& source, mapper, reducer, blaze::DistMap<K, V, H>& dest);
-
-template <class T, class K, class V, class H>
-void mapreduce(const blaze::DistVector<T>& source, mapper, reducer, blaze::DistMap<K, V, H>& dest);
-
-template <class KS, class VS, class HS, class K, class V, class H>
-void mapreduce(
-    const blaze::DistMap<KS, VS, HS>& source, mapper, reducer, blaze::DistMap<K, V, H>& dest);
-    */
-
 }  // namespace blaze
 
 #endif

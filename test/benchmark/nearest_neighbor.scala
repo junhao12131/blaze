@@ -1,5 +1,4 @@
-val textFile = spark.read.textFile("pagerank_data_small.txt")
-val points = textFile.map(line => line.split(" ")).map{case Array(a, b)=>(a.toInt, b.toInt)}
+val textFile = spark.read.textFile("data/pagerank_data_small.txt")
 
 var x = (0, 0)
 
@@ -18,6 +17,7 @@ implicit val sortPoints = new Ordering[(Int, Int)] {
   }
 
 var t0 = 0L
+val points = textFile.map(line => line.split(" ")).map{case Array(a, b)=>(a.toInt, b.toInt)}
 
 for (i <- 0 to 10) {
   if (i == 0) {
@@ -26,8 +26,8 @@ for (i <- 0 to 10) {
   
   x = (i * i, i * i)
   val t00 = System.nanoTime()
-  // val res = points.rdd.top(5)
+  val res = points.rdd.top(5)
   val t01 = System.nanoTime()
-  // println(res(0), res(1))
+  println(res(0), res(1))
   println("Elapsed time: " + ((t01 - t00) / 1.0e6) + "ms")
 }
