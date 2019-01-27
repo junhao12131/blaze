@@ -22,7 +22,7 @@ class DistVector {
 
   void resize(const size_t n, const V& value = V());
 
-  static bool is_local_id(const size_t id);
+  static bool is_local(const size_t key);
 
   size_t size() const { return n; }
 
@@ -85,10 +85,10 @@ DistVector<V>::DistVector(const size_t n, const V& value) {
 }
 
 template <class V>
-bool DistVector<V>::is_local_id(const size_t id) {
+bool DistVector<V>::is_local(const size_t key) {
   static size_t n_procs_u = internal::MpiUtil::get_n_procs();
   static size_t proc_id_u = internal::MpiUtil::get_proc_id();
-  return id % n_procs_u == proc_id_u;
+  return key % n_procs_u == proc_id_u;
 }
 
 template <class V>
@@ -261,15 +261,17 @@ std::vector<V> DistVector<V>::top_k(
         msg_buf.append(msg_buf_char, BUF_SIZE);
         pos += BUF_SIZE;
       }
-      MPI_Recv(
-          msg_buf_char,
-          msg_size - pos,
-          MPI_CHAR,
-          proc_id + step,
-          0,
-          MPI_COMM_WORLD,
-          MPI_STATUS_IGNORE);
-      msg_buf.append(msg_buf_char, msg_size - pos);
+      if (pos < msg_size) {
+        MPI_Recv(
+            msg_buf_char,
+            msg_size - pos,
+            MPI_CHAR,
+            proc_id + step,
+            0,
+            MPI_COMM_WORLD,
+            MPI_STATUS_IGNORE);
+        msg_buf.append(msg_buf_char, msg_size - pos);
+      }
 
       // Parse data.
       hps::from_string(msg_buf, partner_top_k);
@@ -315,8 +317,10 @@ std::vector<V> DistVector<V>::top_k(
         MPI_Send(msg_buf_char, BUF_SIZE, MPI_CHAR, proc_id - step, 0, MPI_COMM_WORLD);
         pos += BUF_SIZE;
       }
-      msg_buf.copy(msg_buf_char, msg_size - pos, pos);
-      MPI_Send(msg_buf_char, msg_size - pos, MPI_CHAR, proc_id - step, 0, MPI_COMM_WORLD);
+      if (pos < msg_size) {
+        msg_buf.copy(msg_buf_char, msg_size - pos, pos);
+        MPI_Send(msg_buf_char, msg_size - pos, MPI_CHAR, proc_id - step, 0, MPI_COMM_WORLD);
+      }
     }
 
     step <<= 1;

@@ -14,7 +14,11 @@ namespace blaze {
 template <class T>
 std::vector<T> gather(T& t) {
   const int n_procs = internal::MpiUtil::get_n_procs();
-  if (n_procs == 1) return std::vector<T>({t});
+  std::vector<T> res(n_procs);
+  if (n_procs == 1) {
+    res[0] = t;
+    return res;
+  }
 
   // Gather message sizes.
   std::string msg_buf = hps::to_string(t);
@@ -26,7 +30,6 @@ std::vector<T> gather(T& t) {
   // Gather message.
   const size_t max_msg_size = *std::max_element(msg_sizes.begin(), msg_sizes.end());
   msg_buf.reserve(max_msg_size);
-  std::vector<T> res(n_procs);
   std::vector<std::string> recv_buf(n_procs);
   size_t pos = 0;
   const int BUF_SIZE = 1 << 20;

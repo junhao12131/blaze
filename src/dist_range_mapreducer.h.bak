@@ -1,0 +1,257 @@
+#ifndef BLAZE_DIST_RANGE_MAPREDUCER_H_
+#define BLAZE_DIST_RANGE_MAPREDUCER_H_
+
+#include <mpi.h>
+#include <omp.h>
+#include <cstring>
+#include <functional>
+#include <string>
+#include <vector>
+
+#include "dist_hash_map.h"
+#include "dist_range.h"
+#include "dist_vector.h"
+#include "internal/mapreduce_util.h"
+#include "internal/mpi_type.h"
+#include "internal/mpi_util.h"
+#include "reducer.h"
+
+namespace blaze {
+
+template <class VS>
+class DistRangeMapreducer {
+ public:
+  template <class VD>
+  static void mapreduce(
+      blaze::DistRange<VS>& source,
+      const std::function<
+          void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+      const std::string& reducer,
+      std::vector<VD>& dest);
+
+  template <class VD>
+  static void mapreduce(
+      blaze::DistRange<VS>& source,
+      const std::function<
+          void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+      const std::function<void(VD&, const VD&)>& reducer,
+      std::vector<VD>& dest);
+
+  template <class VD>
+  static void mapreduce(
+      blaze::DistRange<VS>& source,
+      const std::function<
+          void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+      const std::function<void(VD&, const VD&)>& reducer,
+      blaze::DistVector<VD>& dest);
+
+  template <class KD, class VD, class HD = std::hash<KD>>
+  static void mapreduce(
+      blaze::DistRange<VS>& source,
+      const std::function<
+          void(const VS value, const std::function<void(const KD&, const VD&)>& emit)>& mapper,
+      const std::function<void(VD&, const VD&)>& reducer,
+      blaze::DistHashMap<KD, VD, HD>& dest);
+};
+
+template <class VS>
+template <class VD>
+void DistRangeMapreducer<VS>::mapreduce(
+    blaze::DistRange<VS>& source,
+    const std::function<
+        void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+    const std::function<void(VD&, const VD&)>& reducer,
+    std::vector<VD>& dest) {
+  // Map and thread reduce.
+  const int n_threads = omp_get_max_threads();
+  const size_t n_keys = dest.size();
+  std::vector<std::vector<VD>> res_threads(n_threads);
+  const VD default_value = VD();
+  for (int i = 0; i < n_threads; i++) {
+    res_threads[i].assign(n_keys, default_value);
+  }
+  const auto& emit = [&](const size_t key, const VD& value) {
+    const int thread_id = omp_get_thread_num();
+    reducer(res_threads[thread_id][key], value);
+  };
+  source.for_each([&](const VS t) { mapper(t, emit); });
+
+  // Node reduce.
+  int step = 1;
+  while (step < n_threads) {
+    int i_end = n_threads - step;
+    int i_step = step << 1;
+#pragma omp parallel for schedule(static, 1)
+    for (int i = 0; i < i_end; i += i_step) {
+      for (size_t j = 0; j < n_keys; j++) {
+        reducer(res_threads[i][j], res_threads[i + step][j]);
+      }
+    }
+    step <<= 1;
+  }
+
+  std::vector<VD> res(n_keys);
+  std::vector<VD> res_local(n_keys);
+  std::vector<VD> res_remote(n_keys);
+
+  // Cross-node tree reduce.
+  int step = 1;
+  const int n_procs = blaze::MpiUtil::get_n_procs();
+  const int BUF_SIZE = 1 << 20;
+  std::string msg_buf;
+  char msg_buf_char[BUF_SIZE];
+  size_t msg_size = 0;
+  while (step < n_procs) {
+    if ((proc_id & (step >> 1)) != 0) break;
+    bool is_receiver = (proc_id & step) == 0;
+    size_t pos = 0;
+    msg_buf.clear();
+
+    if (is_receiver && proc_id + step < n_procs) {
+      // Get size.
+      MPI_Recv(
+          &msg_size,
+          1,
+          internal::MpiType<size_t>::value,
+          proc_id + step,
+          0,
+          MPI_COMM_WORLD,
+          MPI_STATUS_IGNORE);
+      msg_buf.reserve(msg_size);
+
+      // Get data.
+      while (pos + BUF_SIZE <= msg_size) {
+        MPI_Recv(
+            msg_buf_char, BUF_SIZE, MPI_CHAR, proc_id + step, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        msg_buf.append(msg_buf_char, BUF_SIZE);
+        pos += BUF_SIZE;
+      }
+      if (pos < msg_size) {
+        MPI_Recv(
+            msg_buf_char,
+            msg_size - pos,
+            MPI_CHAR,
+            proc_id + step,
+            0,
+            MPI_COMM_WORLD,
+            MPI_STATUS_IGNORE);
+        msg_buf.append(msg_buf_char, msg_size - pos);
+      }
+
+      // Parse data.
+      hps::from_string(msg_buf, res_remote);
+
+      // Reduce.
+      for (size_t i = 0; i < n_keys; i++) reduce(res_local[i], res_remote[i]);
+    } else {
+      
+    }
+  }
+
+  memcpy(res_local.data(), res_threads[0].data(), n_keys * sizeof(VD));
+
+  // Cross-node tree reduce.
+  MPI_Allreduce(
+      res_local.data(),
+      res.data(),
+      n_keys,
+      internal::MpiType<VD>::value,
+      internal::MapreduceUtil::get_mpi_op(reducer),
+      MPI_COMM_WORLD);
+
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0; i < n_keys; i++) {
+    reducer_func(dest[i], res[i]);
+  }
+}
+
+template <class VS>
+template <class VD>
+void DistRangeMapreducer<VS>::mapreduce(
+    blaze::DistRange<VS>& source,
+    const std::function<
+        void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+    const std::string& reducer,
+    std::vector<VD>& dest) {
+  // Map and thread reduce.
+  const int n_threads = omp_get_max_threads();
+  const size_t n_keys = dest.size();
+  std::vector<std::vector<VD>> res_threads(n_threads);
+  const VD default_value = VD();
+  for (int i = 0; i < n_threads; i++) {
+    res_threads[i].assign(n_keys, default_value);
+  }
+  const auto& reducer_func = internal::MapreduceUtil::get_reducer_func<VD>(reducer);
+  const auto& emit = [&](const size_t key, const VD& value) {
+    const int thread_id = omp_get_thread_num();
+    reducer_func(res_threads[thread_id][key], value);
+  };
+  source.for_each([&](const VS t) { mapper(t, emit); });
+
+  // Node reduce.
+  int step = 1;
+  while (step < n_threads) {
+    int i_end = n_threads - step;
+    int i_step = step << 1;
+#pragma omp parallel for schedule(static, 1)
+    for (int i = 0; i < i_end; i += i_step) {
+      for (size_t j = 0; j < n_keys; j++) {
+        reducer_func(res_threads[i][j], res_threads[i + step][j]);
+      }
+    }
+    step <<= 1;
+  }
+
+  std::vector<VD> res(n_keys);
+  std::vector<VD> res_local(n_keys);
+
+  memcpy(res_local.data(), res_threads[0].data(), n_keys * sizeof(VD));
+
+  // Cross-node tree reduce.
+  MPI_Allreduce(
+      res_local.data(),
+      res.data(),
+      n_keys,
+      internal::MpiType<VD>::value,
+      internal::MapreduceUtil::get_mpi_op(reducer),
+      MPI_COMM_WORLD);
+
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0; i < n_keys; i++) {
+    reducer_func(dest[i], res[i]);
+  }
+}
+
+template <class VS>
+template <class VD>
+void DistRangeMapreducer<VS>::mapreduce(
+    blaze::DistRange<VS>& source,
+    const std::function<
+        void(const VS value, const std::function<void(const size_t, const VD&)>& emit)>& mapper,
+    const std::function<void(VD&, const VD&)>& reducer,
+    blaze::DistVector<VD>& dest) {
+  const auto& emit = [&](const size_t key, const VD& value) {
+    dest.async_set(key, value, reducer);
+  };
+  const auto& handler = [&](const VS& value) { mapper(value, emit); };
+  source.for_each(handler);
+  dest.sync(reducer);
+}
+
+template <class VS>
+template <class KD, class VD, class HD>
+void DistRangeMapreducer<VS>::mapreduce(
+    blaze::DistRange<VS>& source,
+    const std::function<
+        void(const VS value, const std::function<void(const KD&, const VD&)>& emit)>& mapper,
+    const std::function<void(VD&, const VD&)>& reducer,
+    blaze::DistHashMap<KD, VD, HD>& dest) {
+  const auto& emit = [&](const KD& key, const VD& value) { dest.async_set(key, value, reducer); };
+  const auto& handler = [&](const VS& value) { mapper(value, emit); };
+  source.for_each(handler);
+  dest.sync(reducer);
+}
+
+}  // namespace blaze
+
+#endif

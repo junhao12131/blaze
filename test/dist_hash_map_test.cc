@@ -28,35 +28,3 @@ TEST(DistHashMapTest, Mapreduce) {
   EXPECT_EQ(sum, N_KEYS * (N_KEYS - 1) / 2);
 }
 
-/*
-TEST(DistHashMapTest, MapreduceShakes) {
-  std::ifstream file("/home/ec2-user/g1");
-  std::vector<std::string> lines;
-  lines.reserve(1e8);
-  std::string line;
-  while (std::getline(file, line)) {
-    lines.push_back(line);
-  }
-  std::cout << lines.size() << std::endl;
-  blaze::DistRange<int> range(0, lines.size());
-  blaze::DistHashMap<std::string, int> dm;
-  dm.reserve(50000);
-  range.for_each([&](const int i) {
-    const std::string& line = lines[i];
-    std::string word;
-    for (char c : line) {
-      if (c != ' ') {
-        word.push_back(c);
-      } else if (!word.empty()) {
-        dm.async_set(word, 1, blaze::Reducer<int>::sum);
-        word.clear();
-      }
-    }
-    if (!word.empty()) {
-      dm.async_set(word, 1, blaze::Reducer<int>::sum);
-    }
-  });
-  dm.sync(blaze::Reducer<int>::sum);
-  std::cout << dm.get_n_keys() << std::endl;
-}
-*/

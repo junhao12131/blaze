@@ -1,5 +1,4 @@
-val textFile = sc.textFile("data/bible+shakes.nopunc")
-val lines = textFile.flatMap(line => line.split(" ")).cache()
+val textFile = sc.textFile("data/bible+shakes.nopunc").cache()
 
 var start = 0L
 for (i <- 0 to 3) {
@@ -8,7 +7,7 @@ for (i <- 0 to 3) {
   }
   println(i)
   val it_start = System.nanoTime()  
-  val counts = lines.map(word => (word, 1)).reduceByKey(_ + _)
+  val counts = textFile.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_ + _)
   println(counts.count())
   val it_end = System.nanoTime()  
   println("Elapsed time: " + ((it_end - it_start) / 1.0e6) + "ms")
