@@ -15,11 +15,13 @@ In this example, we build a distributed hash map of word occurrences`<std::strin
 ```C++
 auto lines = blaze::util::load_file("filepath...");
 const auto& mapper = [&](const size_t, const std::string& line, const auto& emit) {
+  // First argument is line_id, which is not needed.
   std::stringstream ss(line);
   std::string word;
   while (getline(ss, word, ' ')) emit(word, 1);
 };
 blaze::DistHashMap<std::string, size_t> words;
+// mapreduce(source, mapper, reducer, target)
 blaze::mapreduce<std::string, std::string, size_t>(lines, mapper, "sum", words);
 std::cout << words.get_n_keys() << std::endl;
 ```
