@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_DIST_HASH_BASE_H_
+#define BLAZE_INTERNAL_HASH_DIST_HASH_BASE_H_
 
 #include <vector>
 #include "../mpi_type.h"
@@ -139,3 +140,5 @@ void DistHashBase<K, V, C, H>::clear_and_shrink() {
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_CONCURRENT_HASH_BASE_H_
+#define BLAZE_INTERNAL_HASH_CONCURRENT_HASH_BASE_H_
 
 #include <omp.h>
 #include <functional>
@@ -150,3 +151,5 @@ void ConcurrentHashBase<K, V, S, H>::clear_and_shrink() {
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

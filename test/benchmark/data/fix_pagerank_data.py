@@ -2,7 +2,7 @@ import random
 
 def main():
     FILENAME = 'pagerank_data.txt'
-    SCALE = 5
+    SCALE = 18
     fin = open(FILENAME, 'r')
     lines = []
     vertices = set()

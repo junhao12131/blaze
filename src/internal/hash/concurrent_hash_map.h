@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_CONCURRENT_HASH_MAP_H_
+#define BLAZE_INTERNAL_HASH_CONCURRENT_HASH_MAP_H_
 
 #include <functional>
 #include "concurrent_hash_base.h"
@@ -163,3 +164,5 @@ void ConcurrentHashMap<K, V, H>::parse(B& buf) {
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif

@@ -77,7 +77,7 @@ TEST(BenchmarkTest, Pagerank) {
     if (origin >= n) n = origin + 1;
     if (dest >= n) n = dest + 1;
 
-    if (!blaze::DistVector<double>::is_local_id(origin)) continue;
+    if (!blaze::DistVector<double>::is_local(origin)) continue;
     links[origin].push_back(dest);
   }
 

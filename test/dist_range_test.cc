@@ -18,4 +18,8 @@ TEST(DistRangeTest, SumSquaresMapreduce) {
   blaze::DistRangeMapreducer<size_t>::mapreduce<size_t>(range, mapper, "sum", result);
   const size_t expected = N_SAMPLES * (N_SAMPLES + 1) * (2 * N_SAMPLES + 1) / 6;
   EXPECT_EQ(result[0], expected);
+
+  result[0] = 0;
+  blaze::DistRangeMapreducer<size_t>::mapreduce<size_t>(range, mapper, blaze::Reducer<size_t>::sum, result);
+  EXPECT_EQ(result[0], expected);
 }

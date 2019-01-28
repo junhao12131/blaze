@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_MPI_TYPE_H_
+#define BLAZE_INTERNAL_MPI_TYPE_H_
 
 #include <mpi.h>
 
@@ -72,5 +73,8 @@ template <>
 struct MpiType<long double> {
   constexpr static MPI_Datatype value = MPI_LONG_DOUBLE;
 };
+
 };  // namespace internal
 };  // namespace blaze
+
+#endif

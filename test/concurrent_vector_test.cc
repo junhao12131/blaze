@@ -28,7 +28,7 @@ TEST(ConcurrentVectorTest, SumSquaresAsync) {
 
 #pragma omp parallel for schedule(static, 1)
   for (size_t i = 1; i <= LEN; i++) {
-    vec.async_set(i, i * i);
+    vec.async_set(i, i * i, blaze::Reducer<double>::overwrite);
   }
   vec.sync();
 

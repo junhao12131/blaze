@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLAZE_INTERNAL_HASH_DIST_HASHER_H_
+#define BLAZE_INTERNAL_HASH_DIST_HASHER_H_
 
 #include <functional>
 #include "../mpi_util.h"
@@ -19,6 +20,9 @@ class DistHasher {
 
   size_t n_procs_u;
 };
+
 }  // namespace hash
 }  // namespace internal
 }  // namespace blaze
+
+#endif
