@@ -9,8 +9,8 @@ These functions are optimized from ground up and are usually several times faste
 For most parallel algorithms, users only need to write a few mapper functions and they will get similar performance as hand-optimized code written with raw sockets and threads.
 We also provide some additional features to compensate MapReduce, such as loading files to distributed data containers, converting to and from C++ standard containers, etc.
 
-# Example
-## Word Count
+## Example
+### Word Count
 In this example, we build a distributed hash map of word occurrences`<std::string, size_t>` and count the number of unique words.
 ```C++
 auto lines = blaze::util::load_file("filepath...");
@@ -24,7 +24,7 @@ blaze::mapreduce<std::string, std::string, size_t>(lines, mapper, "sum", words);
 std::cout << words.size() << std::endl;
 ```
 
-## Pi Estimate
+### Pi Estimate
 In this example, we estimate pi using the Monte Carlo method.
 ```C++
 double thread_safe_rand() {
@@ -48,6 +48,6 @@ std::cout << 4.0 * count[0] / N_SAMPLES << std::endl;
 This use case will incur huge memory consumption and have extremely slow performance for conventional MapReduce implementation.
 However, with `blaze`, the above code will have similar memory consumption and performance as a carefully-optimized implementation using parallel for loops.
 
-# Benchmarks
+## Benchmarks
 
-# APIs
+## APIs
