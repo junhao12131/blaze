@@ -1,12 +1,12 @@
 #ifndef BLAZE_H_
 #define BLAZE_H_
 
-#include "broadcast.h"
-#include "collect.h"
-#include "distribute.h"
-#include "gather.h"
-#include "load_file.h"
-#include "mapreduce.h"
-#include "reducer.h"
+#include "src/broadcast.h"
+#include "src/collect.h"
+#include "src/distribute.h"
+#include "src/gather.h"
+#include "src/load_file.h"
+#include "src/mapreduce.h"
+#include "src/reducer.h"
 
 #endif

@@ -1,9 +1,9 @@
 #ifndef BLAZE_BROADCAST_H_
 #define BLAZE_BROADCAST_H_
 
-#include <hps/src/hps.h>
 #include <string>
 
+#include "../vendor/hps/src/hps.h"
 #include "internal/mpi_type.h"
 #include "internal/mpi_util.h"
 
