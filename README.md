@@ -7,7 +7,7 @@ This library provides a set of utility functions and distributed data containers
 We provide MapReduce functions to process and convert one data container to another.
 These functions are optimized from ground up and are usually several times faster than Aparch Spark at the time of this update.
 For most parallel algorithms, users only need to write a few mapper functions and they will get similar performance as hand-optimized code written with raw sockets and threads.
-We also provide some additional features to compensate MapReduce, such as loading files to distributed data containers, converting to and from C++ standard containers, etc.
+We also provide some additional features to complement MapReduce, such as loading files to distributed data containers, converting to and from C++ standard containers, etc.
 
 ## Example
 ### Word Count
