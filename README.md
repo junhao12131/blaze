@@ -22,7 +22,7 @@ const auto& mapper = [&](const size_t, const std::string& line, const auto& emit
 };
 blaze::DistHashMap<std::string, size_t> words;  // Target
 blaze::mapreduce<std::string, std::string, size_t>(lines, mapper, "sum", words);
-std::cout << words.get_n_keys() << std::endl;
+std::cout << words.size() << std::endl;
 ```
 
 ### Pi Estimate
