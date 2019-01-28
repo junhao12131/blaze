@@ -13,15 +13,14 @@ We also provide some additional features to compensate MapReduce, such as loadin
 ### Word Count
 In this example, we build a distributed hash map of word occurrences`<std::string, size_t>` and count the number of unique words.
 ```C++
-auto lines = blaze::util::load_file("filepath...");
+auto lines = blaze::util::load_file("filepath...");  // Source
 const auto& mapper = [&](const size_t, const std::string& line, const auto& emit) {
   // First argument is line_id, which is not needed.
   std::stringstream ss(line);
   std::string word;
-  while (getline(ss, word, ' ')) emit(word, 1);
+  while (getline(ss, word, ' ')) emit(word, 1);  // Split into tokens.
 };
-blaze::DistHashMap<std::string, size_t> words;
-// mapreduce(source, mapper, reducer, target)
+blaze::DistHashMap<std::string, size_t> words;  // Target
 blaze::mapreduce<std::string, std::string, size_t>(lines, mapper, "sum", words);
 std::cout << words.get_n_keys() << std::endl;
 ```
@@ -30,10 +29,11 @@ std::cout << words.get_n_keys() << std::endl;
 In this example, we estimate π using the Monte Carlo method.
 ```C++
 double thread_safe_rand() {
-    static thread_local std::mt19937 generator(
-        std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<double> distribution;
-    return distribution(generator);
+  // The default random number generator is not thread safe.
+  static thread_local std::mt19937 generator(
+      std::chrono::system_clock::now().time_since_epoch().count());
+  std::uniform_real_distribution<double> distribution;
+  return distribution(generator);
 }
 
 const size_t N_SAMPLES = 1000000;
