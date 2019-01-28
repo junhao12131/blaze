@@ -17,7 +17,8 @@ implicit val sortPoints = new Ordering[(Int, Int)] {
   }
 
 var t0 = 0L
-val points = textFile.map(line => line.split(" ")).map{case Array(a, b)=>(a.toInt, b.toInt)}
+val points_ = textFile.map(line => line.split(" ")).map{case Array(a, b)=>(a.toInt, b.toInt)}
+val points = points_.cache()
 
 for (i <- 0 to 10) {
   if (i == 0) {

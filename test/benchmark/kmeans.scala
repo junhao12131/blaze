@@ -4,7 +4,7 @@ import org.apache.spark.storage.StorageLevel._
 
 // Load and parse the data
 val data = sc.textFile("data/cluster_data_kmeans.txt")
-val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
+val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).persist(MEMORY_ONLY)
 
 
 // Cluster the data into classes using KMeans

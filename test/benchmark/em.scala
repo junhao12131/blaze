@@ -1,10 +1,11 @@
 import org.apache.spark.mllib.linalg.{DenseVector, Vectors, DenseMatrix}
 import org.apache.spark.mllib.clustering.{GaussianMixture, GaussianMixtureModel}
 import org.apache.spark.mllib.stat.distribution.MultivariateGaussian
+import org.apache.spark.storage.StorageLevel._
 
 // Load and parse the data
 val data = sc.textFile("data/cluster_data_em.txt")
-val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
+val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).persist(MEMORY_ONLY)
 
 val sigma = DenseMatrix.eye(3)
 
