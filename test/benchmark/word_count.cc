@@ -10,7 +10,7 @@
 
 TEST(BenchmarkTest, WordCount) {
   using namespace std::chrono;
-  std::ifstream file("test/benchmark/data/bible+shakes.nopunc");
+  std::ifstream file("test/benchmark/data/word_count_data.txt");
   std::vector<std::string> lines;
   std::string line;
   while (std::getline(file, line)) {

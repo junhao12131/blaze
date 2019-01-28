@@ -59,7 +59,8 @@ void run_kmeans(
 }
 
 TEST(BenchmarkTest, KMeans) {
-  std::ifstream file("test/benchmark/data/kmeans_data_small.txt");
+  using namespace std::chrono;
+  std::ifstream file("test/benchmark/data/cluster_data_kmeans.txt");
   std::vector<std::array<double, 3>> points;
   std::array<double, 3> point;
   if (!file.is_open()) throw std::runtime_error("Error opening file");
@@ -74,24 +75,27 @@ TEST(BenchmarkTest, KMeans) {
   const int n_centers = 5;
   std::vector<std::array<double, 3>> centers(n_centers);
 
-  std::chrono::steady_clock::time_point start;
+  steady_clock::time_point start;
   for (int t = 0; t <= 5; t++) {
     if (t == 1) {
-      start = std::chrono::steady_clock::now();
+      start = steady_clock::now();
     }
     printf("Iteration %d:\n", t);
     for (int i = 0; i < n_centers; i++) {
       centers[i].fill(0);
       centers[i][0] = i;
     }
+  auto it_start = steady_clock::now();
     run_kmeans(points, centers, 1.0e-10);
+  auto it_end = steady_clock::now();
     for (int i = 0; i < n_centers; i++) {
       for (int k = 0; k < 3; k++) {
         printf("%.8f ", centers[i][k]);
       }
       printf("\n");
     }
+    std::cout << duration_cast<milliseconds>(it_end - it_start).count() << " ms\n";
   }
-  auto end = std::chrono::steady_clock::now();
-  std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms\n";
+  auto end = steady_clock::now();
+  std::cout << duration_cast<milliseconds>(end - start).count() << " ms\n";
 }

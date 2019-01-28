@@ -1,4 +1,6 @@
 **/data/*.txt
+**/data/util.c
+*.pyx
 
 # Prerequisites
 *.d

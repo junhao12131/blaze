@@ -1,4 +1,4 @@
-val textFile = sc.textFile("data/bible+shakes.nopunc").cache()
+val textFile = sc.textFile("data/word_count_data.txt").cache()
 
 var start = 0L
 for (i <- 0 to 3) {
