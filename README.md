@@ -1,7 +1,6 @@
 # Blaze
 High Performance MapReduce-First Cluster Computing Library
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0e21ce6d4f7e4e83a67ea4603db3bb61)](https://app.codacy.com/app/junhao12131/blaze?utm_source=github.com&utm_medium=referral&utm_content=junhao12131/blaze&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/junhao12131/blaze.svg?branch=master)](https://travis-ci.org/junhao12131/blaze)
 [![C++ Version](https://img.shields.io/badge/c%2B%2B-%3E%3D_14-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B14)
 
