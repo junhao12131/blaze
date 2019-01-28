@@ -2,6 +2,7 @@
 High Performance MapReduce-First Cluster Computing Library
 
 [![Build Status](https://travis-ci.org/junhao12131/blaze.svg?branch=master)](https://travis-ci.org/junhao12131/blaze)
+[![C++ Version](https://img.shields.io/badge/c%2B%2B-%3E%3D_14-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B14)
 
 This library provides a set of utility functions and distributed data containers for high performance cluster computing.
 We provide MapReduce functions to process and convert one data container to another.
