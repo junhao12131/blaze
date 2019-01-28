@@ -43,7 +43,7 @@ const auto& mapper = [&](const size_t, const auto& emit) {
   double y = thread_safe_rand();
   if (x * x + y * y < 1) emit(0, 1);
 };
-std::vector<size_t> count(1);
+std::vector<size_t> count(1);  // {0}
 blaze::mapreduce<size_t, size_t>(samples, mapper, "sum", count);
 std::cout << 4.0 * count[0] / N_SAMPLES << std::endl;
 ```
