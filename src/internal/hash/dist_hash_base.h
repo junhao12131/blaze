@@ -19,6 +19,8 @@ class DistHashBase {
 
   size_t get_n_keys();
 
+  size_t size() { return get_n_keys(); }
+
   size_t get_n_buckets();
 
   float get_load_factor();

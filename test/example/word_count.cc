@@ -13,5 +13,5 @@ TEST(ExampleTest, WordCount) {
   };
   blaze::DistHashMap<std::string, size_t> words;
   blaze::mapreduce<std::string, std::string, size_t>(lines, mapper, "sum", words);
-  std::cout << words.get_n_keys() << std::endl;
+  std::cout << words.size() << std::endl;
 }
