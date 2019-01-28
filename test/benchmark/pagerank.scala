@@ -1,7 +1,9 @@
 import org.apache.spark.graphx.GraphLoader
 import org.apache.spark.graphx.lib.PageRank
+import org.apache.spark.storage.StorageLevel._
 
 val graph = GraphLoader.edgeListFile(sc, "data/pagerank_data.txt").cache()
+
 var t0 = 0L
 for (i <- 0 to 3) {
   if (i == 1) {
