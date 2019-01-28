@@ -25,7 +25,7 @@ std::cout << words.size() << std::endl;
 ```
 
 ### Pi Estimate
-In this example, we estimate pi using the Monte Carlo method.
+In this example, we estimate π using the Monte Carlo method.
 ```C++
 double thread_safe_rand() {
     static thread_local std::mt19937 generator(
