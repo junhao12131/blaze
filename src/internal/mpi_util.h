@@ -3,6 +3,7 @@
 
 #include <mpi.h>
 #include <algorithm>
+#include <stdexcept>
 
 namespace blaze {
 namespace internal {
