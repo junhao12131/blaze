@@ -19,7 +19,7 @@ const auto& mapper = [&](const size_t, const std::string& line, const auto& emit
   // First argument is line_id, which is not needed.
   std::stringstream ss(line);
   std::string word;
-  while (getline(ss, word, ' ')) emit(word, 1);  // Split into tokens.
+  while (getline(ss, word, ' ')) emit(word, 1);  // Split line into words.
 };
 blaze::DistHashMap<std::string, size_t> words;  // Target
 blaze::mapreduce<std::string, std::string, size_t>(lines, mapper, "sum", words);
