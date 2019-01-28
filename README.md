@@ -11,7 +11,7 @@ We also provide some additional features to complement MapReduce, such as loadin
 
 ## Example
 ### Word Count
-In this example, we build a distributed hash map of word occurrences`<std::string, size_t>` and count the number of unique words.
+In this example, we build a distributed hash map of word occurrences`<std::string, size_t>` and output the number of unique words.
 ```C++
 auto lines = blaze::util::load_file("filepath...");  // Source
 const auto& mapper = [&](const size_t, const std::string& line, const auto& emit) {
