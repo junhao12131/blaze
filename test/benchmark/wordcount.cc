@@ -10,7 +10,7 @@
 
 TEST(BenchmarkTest, WordCount) {
   using namespace std::chrono;
-  std::ifstream file("test/benchmark/data/word_count_data.txt");
+  std::ifstream file("test/benchmark/data/wordcount_data.txt");
   std::vector<std::string> lines;
   std::string line;
   while (std::getline(file, line)) {
@@ -40,7 +40,7 @@ TEST(BenchmarkTest, WordCount) {
     auto it_start = steady_clock::now();
     blaze::DistHashMap<std::string, size_t> dm;
     blaze::mapreduce<size_t, std::string, size_t>(
-        lines_range, line_mapper, blaze::Reducer<size_t>::sum, dm);
+        lines_range, line_mapper, "sum", dm);
     auto it_end = steady_clock::now();
     std::cout << duration_cast<milliseconds>(it_end - it_start).count() << " ms\n";
     std::cout << dm.get_n_keys() << std::endl;

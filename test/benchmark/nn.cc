@@ -5,11 +5,24 @@
 #include <functional>
 
 #include "../../src/distribute.h"
+#include "../../blaze.h"
 
 TEST(BenchmarkTest, NearestNeighbor) {
   using namespace std::chrono;
-  std::ifstream file("test/benchmark/data/nn_data.txt");
+  // std::ifstream file("test/benchmark/data/nn_data.txt");
+  auto lines = blaze::util::load_file("test/benchmark/data/nn_data.txt");
+  blaze::DistVector<std::array<int, 2>> dist_points(lines.size());
 
+  const auto& mapper = [&](const size_t key, const std::string& line, const auto& emit) {
+    std::stringstream ss(line);
+    std::array<int, 2> x1;
+    ss >> x1[0] >> x1[1];
+    emit(key, x1);
+  };
+  blaze::mapreduce<std::string, std::array<int, 2>>(lines, mapper, blaze::Reducer<std::array<int, 2>>::overwrite, dist_points);
+
+
+  /*
   if (!file.is_open()) throw std::runtime_error("Error openning file");
 
   std::array<int, 2> x1;
@@ -26,6 +39,7 @@ TEST(BenchmarkTest, NearestNeighbor) {
     n++;
   }
   dist_points.sync();
+  */
 
   std::array<int, 2> x0;
 
