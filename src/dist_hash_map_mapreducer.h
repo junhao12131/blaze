@@ -1,6 +1,10 @@
 #ifndef BLAZE_DIST_HASH_MAP_MAPREDUCER_H_
 #define BLAZE_DIST_HASH_MAP_MAPREDUCER_H_
 
+#include "dist_hash_map.h"
+#include "dist_vector.h"
+#include "internal/vector_mapreduce_wrapper.h"
+
 namespace blaze {
 template <class KS, class VS, class HS = std::hash<KS>>
 class DistHashMapMapreducer {

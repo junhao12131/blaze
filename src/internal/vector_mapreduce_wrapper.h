@@ -1,12 +1,14 @@
 #ifndef BLAZE_VECTOR_UTIL_H_
 #define BLAZE_VECTOR_UTIL_H_
 
-#include <vector>
-#include <string>
 #include <functional>
+#include <string>
+#include <vector>
 
-#include "mpi_util.h"
+#include "../broadcast.h"
+#include "mapreduce_util.h"
 #include "mpi_type.h"
+#include "mpi_util.h"
 
 namespace blaze {
 namespace internal {
