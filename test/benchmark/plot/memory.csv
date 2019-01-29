@@ -1,6 +1,6 @@
-exp,blaze,blaze_opt,spark
-wordcount,12,14,160
-pagerank,23,25,110
-kmeans,40,43,117
-em,70,76,130
-nn,70,76,130
+exp,blaze,spark,blaze_opt
+wordcount,3.2,20,3.0
+pagerank,1.4,27,1.3
+kmeans,2.3,25,3.8
+em,0.8,13,0.8
+nn,10,18,14
