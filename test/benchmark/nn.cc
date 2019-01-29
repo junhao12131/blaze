@@ -9,7 +9,6 @@
 
 TEST(BenchmarkTest, NearestNeighbor) {
   using namespace std::chrono;
-  // std::ifstream file("test/benchmark/data/nn_data.txt");
   auto lines = blaze::util::load_file("test/benchmark/data/nn_data.txt");
   blaze::DistVector<std::array<int, 2>> dist_points(lines.size());
 
@@ -20,26 +19,6 @@ TEST(BenchmarkTest, NearestNeighbor) {
     emit(key, x1);
   };
   blaze::mapreduce<std::string, std::array<int, 2>>(lines, mapper, blaze::Reducer<std::array<int, 2>>::overwrite, dist_points);
-
-
-  /*
-  if (!file.is_open()) throw std::runtime_error("Error openning file");
-
-  std::array<int, 2> x1;
-  size_t n = 0;
-  blaze::DistVector<std::array<int, 2>> dist_points;
-  while (true) {
-    file >> x1[0];
-    if (file.eof()) break;
-    file >> x1[1];
-    if (dist_points.is_local(n)) {
-      dist_points.resize(n + 1);
-      dist_points.async_set(n, x1);
-    }
-    n++;
-  }
-  dist_points.sync();
-  */
 
   std::array<int, 2> x0;
 

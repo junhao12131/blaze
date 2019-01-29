@@ -44,18 +44,21 @@ class util {
         }
       }
     }
+    MPI_File_close(&file);
+
     if (!line.empty()) {
       if (is_local) lines.push_back(line);
       line_index++;
     }
 
     DistVector<std::string> output(line_index);
-    for (size_t i = 0; i < lines.size(); i++) {
+    size_t n_lines = lines.size();
+#pragma omp parallel for schedule(static, 1)
+    for (size_t i = 0; i < n_lines; i++) {
       size_t loop_line_index = i * n_procs_u + proc_id_u;
       output.async_set(loop_line_index, std::move(lines[i]));
     }
-
-    MPI_File_close(&file);
+    output.sync();
 
     return output;
   }
