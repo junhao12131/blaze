@@ -221,7 +221,7 @@ TEST(BenchmarkTest, EMGaussianMixture) {
   std::vector<std::array<std::array<double, 3>, 3>> sigmas(n_centers);
 
   steady_clock::time_point start;
-  for (int t = 0; t <= 3; t++) {
+  for (int t = 0; t <= 5; t++) {
     if (t == 1) {
       start = steady_clock::now();
     }
