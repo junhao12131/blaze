@@ -57,6 +57,8 @@ blaze::DistVector<double> get_page_rank(
     ranks = new_ranks;
   }
 
+  printf("Finished in %zu iterations.\n");
+
   return ranks;
 }
 

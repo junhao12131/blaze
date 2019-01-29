@@ -7,7 +7,7 @@
 #include "../../vendor/eigen-git-mirror/Eigen/Dense"
 
 template <size_t N>
-void run_em_gaussian_mixture(
+size_t run_em_gaussian_mixture(
     const std::vector<std::array<double, N>>& points,
     std::vector<double>& weights,
     std::vector<std::array<double, N>>& centers,
@@ -198,6 +198,8 @@ void run_em_gaussian_mixture(
       denominators[i] = 1.0 / (std::pow(2 * PI, 0.5 * N) * std::sqrt(eigen_sigma.determinant()));
     }
   }
+
+  return iteration;
 }
 
 TEST(BenchmarkTest, EMGaussianMixture) {
@@ -236,7 +238,8 @@ TEST(BenchmarkTest, EMGaussianMixture) {
       }
     }
     auto it_start = steady_clock::now();
-    run_em_gaussian_mixture(points, weights, centers, sigmas, 1.0e-2);
+    auto iterations = run_em_gaussian_mixture(points, weights, centers, sigmas, 1.0e-2);
+    printf("Finished in %zu iterations.\n", iterations);
     auto it_end = steady_clock::now();
     for (int i = 0; i < n_centers; i++) {
       for (int k = 0; k < 3; k++) {

@@ -5,7 +5,7 @@
 #include "../../src/mapreduce.h"
 
 template <size_t N>
-void run_kmeans(
+size_t run_kmeans(
     const std::vector<std::array<double, N>>& points,
     std::vector<std::array<double, N>>& centers,
     double epsilon = 1.0e-10) {
@@ -38,6 +38,7 @@ void run_kmeans(
 
   double max_change = 1.0;
   std::vector<double> res;
+  size_t iteration = 0;
   while (max_change > epsilon) {
     res.assign(n_centers * (N + 1), 0.0);
     blaze::mapreduce<size_t, double>(range, mapper, "sum", res);
@@ -55,7 +56,10 @@ void run_kmeans(
       max_change = std::max(max_change, dist);
     }
     max_change = std::sqrt(max_change);
+    iteration++;
   }
+
+  return iteration;
 }
 
 TEST(BenchmarkTest, KMeans) {
@@ -85,9 +89,10 @@ TEST(BenchmarkTest, KMeans) {
       centers[i].fill(0);
       centers[i][0] = i;
     }
-  auto it_start = steady_clock::now();
-    run_kmeans(points, centers, 1.0e-10);
-  auto it_end = steady_clock::now();
+    auto it_start = steady_clock::now();
+    auto iterations = run_kmeans(points, centers, 1.0e-10);
+    printf("Finishd in %zu iterations.\n", iterations);
+    auto it_end = steady_clock::now();
     for (int i = 0; i < n_centers; i++) {
       for (int k = 0; k < 3; k++) {
         printf("%.8f ", centers[i][k]);
