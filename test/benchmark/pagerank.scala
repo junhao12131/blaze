@@ -12,6 +12,7 @@ for (i <- 0 to 3) {
 
   val t00 = System.nanoTime()
   val ranks = PageRank.runUntilConvergence(graph, 1.0e-5).vertices
+  println(ranks.values.count())
   val t11 = System.nanoTime()
 
   println("Elapsed time: " + ((t11 - t00) / 1.0e6) + "ms")

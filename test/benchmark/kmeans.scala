@@ -9,7 +9,7 @@ val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).pers
 
 // Cluster the data into classes using KMeans
 var start = 0L
-for (i <- 0 to 10) {
+for (i <- 0 to 3) {
   if (i == 1) {
     start = System.nanoTime()
   }
@@ -23,8 +23,8 @@ for (i <- 0 to 10) {
   model.setEpsilon(1.0e-10)
   val it_start = System.nanoTime()
   val res = model.run(parsedData)
-  val it_end = System.nanoTime()
   println(res.clusterCenters.deep.mkString("\n"))
+  val it_end = System.nanoTime()
   println("Elapsed time: " + ((it_end - it_start) / 1.0e6) + "ms")
 }
 val end = System.nanoTime()
