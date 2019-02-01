@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <chrono>
 #include <functional>
+#include <cmath>
 
 #include "../../src/mapreduce.h"
 
@@ -64,7 +65,7 @@ size_t run_kmeans(
 
 TEST(BenchmarkTest, KMeans) {
   using namespace std::chrono;
-  std::ifstream file("test/benchmark/data/cluster_data_kmeans.txt");
+  std::ifstream file("test/benchmark/data/cluster_kmeans_data.txt");
   std::vector<std::array<double, 3>> points;
   std::array<double, 3> point;
   if (!file.is_open()) throw std::runtime_error("Error opening file");
@@ -80,7 +81,7 @@ TEST(BenchmarkTest, KMeans) {
   std::vector<std::array<double, 3>> centers(n_centers);
 
   steady_clock::time_point start;
-  for (int t = 0; t <= 5; t++) {
+  for (int t = 0; t <= 3; t++) {
     if (t == 1) {
       start = steady_clock::now();
     }

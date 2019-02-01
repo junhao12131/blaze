@@ -203,7 +203,7 @@ size_t run_em_gaussian_mixture(
 }
 
 TEST(BenchmarkTest, EMGaussianMixture) {
-  std::ifstream file("test/benchmark/data/cluster_data_em.txt");
+  std::ifstream file("test/benchmark/data/cluster_em_data.txt");
   std::vector<std::array<double, 3>> points;
   std::array<double, 3> point;
   using namespace std::chrono;
@@ -223,7 +223,7 @@ TEST(BenchmarkTest, EMGaussianMixture) {
   std::vector<std::array<std::array<double, 3>, 3>> sigmas(n_centers);
 
   steady_clock::time_point start;
-  for (int t = 0; t <= 5; t++) {
+  for (int t = 0; t <= 3; t++) {
     if (t == 1) {
       start = steady_clock::now();
     }
@@ -238,7 +238,7 @@ TEST(BenchmarkTest, EMGaussianMixture) {
       }
     }
     auto it_start = steady_clock::now();
-    auto iterations = run_em_gaussian_mixture(points, weights, centers, sigmas, 1.0e-2);
+    auto iterations = run_em_gaussian_mixture(points, weights, centers, sigmas, 1.0e-5);
     printf("Finished in %zu iterations.\n", iterations);
     auto it_end = steady_clock::now();
     for (int i = 0; i < n_centers; i++) {
