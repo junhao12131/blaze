@@ -11,7 +11,7 @@ print(args)
 data = pd.read_csv('cognitive.csv')
 print(data)
 
-BAR_WIDTH = 0.33
+BAR_WIDTH = 0.25
 INTERVAL_WIDTH = 0.02
 
 plt.figure(figsize=(5.0, 3.5))
