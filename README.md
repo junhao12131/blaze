@@ -54,7 +54,7 @@ the other one is with hand-optimized parallel for loops to illustrate that Blaze
 This task counts the number of occurrences of each unique word from a text file, which contains about 0.4 billion words in total.
 The performance of Blaze is compared to Apache Spark (from AWS EMR 5.20.0) on several AWS EC2 r5.xlarge instances.
 
-![Word Frequency Count Performance](https://raw.githubusercontent.com/junhao12131/blaze/master/test/benchmark/plot/wordcount_speed.png = 420x300)
+<img src="https://raw.githubusercontent.com/junhao12131/blaze/master/test/benchmark/plot/wordcount_speed.png" width="500">
 
 Here Blaze TCM stands for Blaze linked with the TCMalloc library from Google.
 We can see Blaze is about 10 times faster than Spark for this task.
