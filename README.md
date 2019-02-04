@@ -64,12 +64,12 @@ We can see Blaze is about 10 times faster than Spark for this task.
 ### Pi Estimation and Comparison to Parallel For Loops
 This task compares the performance and source lines of code (SLOC) of the π estimation between a Blaze MapReduce implementation and a hand-optimized parallel for loops implementation.
 
-| Samples | Blaze MapReduce | MPI+OpenMP |
+|  | Blaze MapReduce | MPI+OpenMP |
 | --- | :---: | :---: |
-| **10M** | 12 | 23 |
-| **100M** | 15 | 25 |
-| **1G** | 13 | 20 |
-| **SLOC** | 7 | 16 |
+| **Time for 10M Samples (s)** | 12 | 23 |
+| **Time for 100M Samples (s)** | 15 | 25 |
+| **Time for 1B Samples (s)** | 13 | 20 |
+| **Source Line of Code** | 7 | 16 |
 
 We can see that Blaze MapReduce achieves similar performance as hand-optmized parallel for loops while using significantly less lines of code.
 The hand-optimized code is listed in at `test/example/pi_estimation.cc`.
