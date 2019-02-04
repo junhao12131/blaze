@@ -10,7 +10,7 @@ namespace blaze {
 
 class util {
  public:
-  static void init(int argc, char** argv) { MPI_Init(nullptr, nullptr); }
+  static void init(int, char**) { MPI_Init(nullptr, nullptr); }
 
   static DistVector<std::string> load_file(const std::string& filename) {
     // Open file.
