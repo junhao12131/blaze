@@ -1,6 +1,6 @@
 import org.apache.spark.storage.StorageLevel._
 
-val textFile = sc.textFile("data/word_count_data.txt").persist(MEMORY_ONLY)
+val textFile = sc.textFile("data/wordcount_data.txt").persist(MEMORY_ONLY)
 
 var start = 0L
 for (i <- 0 to 3) {

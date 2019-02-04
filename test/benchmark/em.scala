@@ -7,9 +7,8 @@ import org.apache.spark.storage.StorageLevel._
 val data = sc.textFile("data/cluster_data_em.txt")
 val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).persist(MEMORY_ONLY)
 
-val sigma = DenseMatrix.eye(3)
 
-// Cluster the data into classes using KMeans
+// Cluster the data into classes using EM
 var start = 0L
 for (i <- 0 to 3) {
   if (i == 1) {
@@ -18,6 +17,7 @@ for (i <- 0 to 3) {
   println(i)
   val model = new GaussianMixture()
   model.setK(5)
+  val sigma = DenseMatrix.eye(3)
   val initialModel = new GaussianMixtureModel(
     Array(1.0, 1.0, 1.0, 1.0, 1.0), 
     Array(
@@ -31,8 +31,8 @@ for (i <- 0 to 3) {
   println(model.getMaxIterations)
   val it_start = System.nanoTime()
   val res = model.run(parsedData)
-  val it_end = System.nanoTime()
   res.gaussians.map(g => println(g.mu))
+  val it_end = System.nanoTime()
   println("Elapsed time: " + ((it_end - it_start) / 1.0e6) + "ms")
 }
 val end = System.nanoTime()

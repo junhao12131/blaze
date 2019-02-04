@@ -28,8 +28,8 @@ for (i <- 0 to 10) {
   x = (i * i, i * i)
   val t00 = System.nanoTime()
   val res = points.rdd.top(100)
-  val t01 = System.nanoTime()
   println(res(0))
   println(res(1))
+  val t01 = System.nanoTime()
   println("Elapsed time: " + ((t01 - t00) / 1.0e6) + "ms")
 }
