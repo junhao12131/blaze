@@ -39,7 +39,7 @@ TEST(ExampleTest, PiEstimateRawWarm) {
 }
 
 TEST(ExampleTest, PiEstimateRaw) {
-  const size_t N_SAMPLES = 1000000000;
+  const size_t N_SAMPLES = 1000000;
   int n_procs;
   int proc_id;
   MPI_Comm_size(MPI_COMM_WORLD, &n_procs);
@@ -65,7 +65,7 @@ TEST(ExampleTest, PiEstimateRaw) {
 }
 
 TEST(ExampleTest, PiEstimate) {
-  const size_t N_SAMPLES = 1000000000;
+  const size_t N_SAMPLES = 1000000;
   blaze::DistRange<size_t> samples(0, N_SAMPLES);
   const auto& mapper = [&](const size_t, const auto& emit) {
     double x = thread_safe_rand();
