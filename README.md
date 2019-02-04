@@ -52,13 +52,16 @@ We present two benchmarks here:
 one is with Apache Spark on AWS to show its superior performance on a multi-machine cluster;
 the other one is with hand-optimized parallel for loops to illustrate that Blaze can approach similar performance as hand-optimized code;
 
-### Word Frequency Count (on AWS)
+### Word Frequency Count and Comparison to Apache Spark
 The task counts the number of occurrences of each unique word from a text file, which contains about 0.4 billion words in total.
 The performance of Blaze is compared to Apache Spark (from AWS EMR 5.20.0) on several AWS EC2 r5.xlarge instances.
 
 ![Word Frequency Count Performance](https://raw.githubusercontent.com/junhao12131/blaze/master/test/benchmark/plot/wordcount_speed.png)
 
-### Pi Estimation (local)
+Here Blaze TCM stands for Blaze linked with the TCMalloc library from Google.
+We can see Blaze is about 10 times faster than Spark for this task.
+
+### Pi Estimation and Comparison to Parallel For Loops
 This task compares the performance and source lines of code (SLOC) of the Pi estimation between a Blaze MapReduce implementation and a hand-optimized implementation.
 
 | Samples | Blaze MapReduce | MPI+OpenMP |
@@ -67,3 +70,6 @@ This task compares the performance and source lines of code (SLOC) of the Pi est
 | **100M** | 15 | 25 |
 | **1G** | 13 | 20 |
 | **SLOC** | 7 | 16 |
+
+We can see that Blaze MapReduce achieves similar performance as hand-optmized parallel for loops while using significantly less lines of code.
+The hand-optimized code is listed in at `test/example/pi_estimation.cc`.
