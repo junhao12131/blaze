@@ -44,8 +44,6 @@ std::vector<size_t> count(1);  // {0}
 blaze::mapreduce<size_t, size_t>(samples, mapper, "sum", count);
 std::cout << 4.0 * count[0] / N_SAMPLES << std::endl;
 ```
-For conventional MapReduce implementations, this use case is usually not efficient and consumes large amount of memory.
-However, with `blaze`, the above code will have similar memory consumption and achieve similar performance as a carefully-optimized implementation using hand-coded parallel for loops.
 
 ## Benchmark
 We present two benchmarks here:
