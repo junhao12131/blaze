@@ -10,6 +10,8 @@ This MapReduce function is usually several times faster than Aparch Spark at the
 For most parallel algorithms, users only need to write a few mapper functions and they will get similar performance as hand-optimized code written with raw sockets and threads.
 We also provide some additional features to complement MapReduce, such as loading files to distributed data containers, thread-safe random number generators, and functions for converting distributed containers to and from C++ standard containers, etc.
 
+For additional details, we refer users to our paper [Blaze: Simplified High Performance Cluster Computing](https://arxiv.org/abs/1902.01437).
+
 ## Example
 In this section, we present two examples to illustrate the usage of Blaze.
 The complete code of these examples can be found in the `example` folder.
@@ -64,10 +66,10 @@ This task compares the performance and source lines of code (SLOC) of the π est
 
 |  | Blaze MapReduce | MPI+OpenMP |
 | --- | :---: | :---: |
-| **Time for 10M Samples (s)** | 12 | 23 |
-| **Time for 100M Samples (s)** | 15 | 25 |
-| **Time for 1B Samples (s)** | 13 | 20 |
-| **Source Line of Code** | 7 | 16 |
+| **Time for 10M Samples (s)** | 0.14 | 0.14 |
+| **Time for 100M Samples (s)** | 1.44 | 1.42 |
+| **Time for 1B Samples (s)** | 14.2 | 14.6 |
+| **Source Line of Code** | 8 | 24 |
 
 We can see that Blaze MapReduce achieves similar performance as hand-optmized parallel for loops while using significantly less lines of code.
 The hand-optimized code is listed in at `test/example/pi_estimation.cc`.
