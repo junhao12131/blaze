@@ -10,7 +10,7 @@ This MapReduce function is usually several times faster than Aparch Spark at the
 For most parallel algorithms, users only need to write a few mapper functions and they will get similar performance as hand-optimized code written with raw sockets and threads.
 We also provide some additional features to complement MapReduce, such as loading files to distributed data containers, thread-safe random number generators, and functions for converting distributed containers to and from C++ standard containers, etc.
 
-For additional details, we refer users to our paper [Blaze: Simplified High Performance Cluster Computing](https://arxiv.org/abs/1902.01437).
+For more details about the optimizations and the use cases, we refer users to our paper [Blaze: Simplified High Performance Cluster Computing](https://arxiv.org/abs/1902.01437).
 
 ## Example
 In this section, we present two examples to illustrate the usage of Blaze.
