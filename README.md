@@ -12,10 +12,19 @@ We also provide some additional features to complement MapReduce, such as loadin
 
 For more details about the use cases and our optimizations, we refer users to our paper [Blaze: Simplified High Performance Cluster Computing](https://arxiv.org/abs/1902.01437).
 
-## Example
+## Example / Getting Started
 In this section, we present two examples to illustrate the usage of Blaze.
 The complete code of these examples can be found in the `example` folder.
+
 For your convenience, we also provide the corresponding `Makefile`.
+
+Note that this library has two sets of dependencies:
+
+First, the ones in the vendor directory, which you can get by either add the `--recursive` option when you clone the repository or use the following command later
+```
+git submodule update --init --recursive
+```
+Second, an MPI library. Blaze supports all the major MPI implementations and you can choose the most suitable one for your infrastructure.
 
 ### Word Count
 In this example, we build a distributed hash map of word occurrences`<std::string, size_t>` and output the number of unique words.
@@ -46,6 +55,10 @@ std::vector<size_t> count(1);  // {0}
 blaze::mapreduce<size_t, size_t>(samples, mapper, "sum", count);
 std::cout << 4.0 * count[0] / N_SAMPLES << std::endl;
 ```
+
+More examples are available in the benchmark folder `test/benchmark`.
+These are used when we generate the benchmarks for the paper mentioned above, and contains the Blaze implementation of several popular data mining algorithms.
+Since the input data are huge, we don't provide it here.
 
 ## Benchmark
 We present two benchmarks here:
