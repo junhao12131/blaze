@@ -31,6 +31,7 @@ Second, an MPI library. Blaze supports all the major MPI implementations and you
 ### Word Count
 In this example, we build a distributed hash map of word occurrences`<std::string, size_t>` and output the number of unique words.
 ```C++
+// Load source file into DistVector<string> in parallel.
 auto lines = blaze::util::load_file("filepath...");  // Source
 const auto& mapper = [&](const size_t, const std::string& line, const auto& emit) {
   // First argument is line_id, which is not needed.
