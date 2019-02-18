@@ -12,7 +12,7 @@ We also provide some additional features to complement MapReduce, such as loadin
 
 For more details about the use cases and our optimizations, we refer users to our paper [Blaze: Simplified High Performance Cluster Computing](https://arxiv.org/abs/1902.01437).
 
-Blaze is being actively used in a quantum chemistry package (developed by the Umrigar Group at Cornell University LASSP Lab) and has successfully and efficiently processed **petabytes of scientific data** and saved **billions of corehours of computation** compared to using Spark (or **hundreds of billions of corehours** compared to using Hadoop MapReduce).
+Blaze is being actively used in a quantum chemistry package (developed by the Umrigar Group at Cornell University LASSP Lab) and has successfully and efficiently processed **petabytes of scientific data** and saved **billions of core hours of computation** compared to using Spark (or **hundreds of billions of core hours** compared to using Hadoop MapReduce).
 
 ## Example / Getting Started
 In this section, we present two examples to illustrate the usage of Blaze.
